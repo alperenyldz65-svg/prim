@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#090b12" />
+    <meta
+      name="description"
+      content="PrimBuz Redstone Minecraft sunucusu. Sunucuya katıl, topluluğu keşfet ve VIP paketleri hakkında bilgi al."
+    />
+    <title>PrimBuz Redstone — Minecraft Sunucusu</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #090b12;
+        --surface: #111520;
+        --surface-2: #171c29;
+        --text: #f5f6fa;
+        --muted: #a4aaba;
+        --line: rgba(255, 255, 255, 0.1);
+        --ice: #8be9ff;
+        --blue: #4ea8ff;
+        --purple: #9272ff;
+        --green: #67e6a2;
+        --radius: 22px;
+        --width: 1160px;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+      body {
+        margin: 0;
+        background:
+          radial-gradient(ellipse at 82% 4%, rgba(78, 168, 255, 0.13), transparent 34rem),
+          radial-gradient(ellipse at 12% 35%, rgba(146, 114, 255, 0.11), transparent 30rem),
+          var(--bg);
+        color: var(--text);
+        font: 16px/1.65 system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      a { color: inherit; text-decoration: none; }
+      img { max-width: 100%; display: block; }
+      button { color: inherit; font: inherit; }
+      .container { width: min(var(--width), calc(100% - 40px)); margin-inline: auto; }
+      .muted { color: var(--muted); }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--ice);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .eyebrow::before {
+        content: "";
+        width: 22px;
+        height: 1px;
+        background: currentColor;
+      }
+
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: rgba(9, 11, 18, 0.78);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav {
+        min-height: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 11px;
+        font-weight: 850;
+        letter-spacing: -0.04em;
+      }
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        color: #07101a;
+        font-weight: 950;
+        background: linear-gradient(140deg, var(--ice), var(--blue));
+        box-shadow: 0 0 28px rgba(78, 168, 255, 0.22);
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        color: var(--muted);
+        font-size: 0.94rem;
+      }
+      .nav-links a:hover, .footer a:hover { color: var(--ice); }
+      .nav-actions { display: flex; gap: 10px; align-items: center; }
+
+      .button {
+        display: inline-flex;
+        min-height: 46px;
+        justify-content: center;
+        align-items: center;
+        gap: 9px;
+        padding: 0 18px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        background: rgba(255, 255, 255, 0.035);
+        color: var(--text);
+        font-weight: 750;
+        cursor: pointer;
+        transition: transform 0.18s ease, border-color 0.18s ease, filter 0.18s ease;
+      }
+      .button:hover {
+        transform: translateY(-2px);
+        border-color: rgba(139, 233, 255, 0.5);
+      }
+      .button-primary {
+        color: #07101a;
+        border: 0;
+        background: linear-gradient(115deg, var(--ice), #68b7ff);
+        box-shadow: 0 10px 28px rgba(78, 168, 255, 0.16);
+      }
+      .button-primary:hover { filter: brightness(1.08); }
+      .menu-button { display: none; width: 44px; height: 44px; padding: 0; }
+
+      .hero { padding: 100px 0 72px; }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 60px;
+        align-items: center;
+      }
+      h1, h2, h3, p { margin-top: 0; }
+      h1 {
+        max-width: 720px;
+        margin: 18px 0;
+        font-size: clamp(3rem, 7vw, 5.7rem);
+        line-height: 0.99;
+        letter-spacing: -0.075em;
+      }
+      h1 span { color: var(--ice); }
+      .hero-copy > p {
+        max-width: 580px;
+        color: var(--muted);
+        font-size: 1.1rem;
+      }
+      .hero-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+      .small-note {
+        margin: 16px 0 0;
+        color: #828a9b;
+        font-size: 0.82rem;
+      }
+
+      .server-panel {
+        position: relative;
+        overflow: hidden;
+        padding: 27px;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: linear-gradient(145deg, rgba(23, 31, 47, 0.96), rgba(13, 16, 25, 0.96));
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.32);
+      }
+      .server-panel::after {
+        content: "";
+        position: absolute;
+        width: 240px;
+        height: 240px;
+        right: -90px;
+        top: -110px;
+        border-radius: 50%;
+        background: rgba(78, 168, 255, 0.13);
+        filter: blur(45px);
+        pointer-events: none;
+      }
+      .panel-top, .status-line, .ip-row, .section-heading, .footer-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+      }
+      .panel-label { color: var(--muted); font-size: 0.9rem; }
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+      .status-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #858b99;
+      }
+      .status-dot.online { background: var(--green); box-shadow: 0 0 14px rgba(103, 230, 162, 0.7); }
+      .status-dot.offline { background: #ff6e7c; }
+      .ip-box {
+        position: relative;
+        z-index: 1;
+        margin: 28px 0 18px;
+        padding: 18px;
+        border-radius: 17px;
+        background: rgba(255, 255, 255, 0.045);
+      }
+      .ip-caption {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--muted);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .ip-row strong {
+        overflow-wrap: anywhere;
+        font-size: clamp(1.1rem, 3vw, 1.65rem);
+        letter-spacing: -0.04em;
+      }
+      .copy-button {
+        flex: 0 0 auto;
+        padding: 8px 11px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--surface-2);
+        cursor: pointer;
+      }
+      .copy-button:hover { border-color: var(--ice); }
+      .server-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .detail {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.025);
+      }
+      .detail span { display: block; color: var(--muted); font-size: 0.77rem; }
+      .detail strong { display: block; margin-top: 3px; font-size: 0.98rem; }
+      .status-message {
+        min-height: 24px;
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .section { padding: 82px 0; }
+      .section-heading {
+        align-items: end;
+        margin-bottom: 30px;
+      }
+      .section-heading h2 {
+        max-width: 700px;
+        margin: 10px 0 0;
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        line-height: 1.08;
+        letter-spacing: -0.055em;
+      }
+      .section-heading p {
+        max-width: 440px;
+        margin: 0;
+        color: var(--muted);
+      }
+      .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+      .card {
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+      }
+      .feature-icon {
+        display: grid;
+        place-items: center;
+        width: 45px;
+        height: 45px;
+        margin-bottom: 22px;
+        border: 1px solid rgba(139, 233, 255, 0.2);
+        border-radius: 14px;
+        background: rgba(78, 168, 255, 0.09);
+        color: var(--ice);
+        font-size: 1.25rem;
+      }
+      .card h3 { margin-bottom: 8px; font-size: 1.12rem; }
+      .card p { margin-bottom: 0; color: var(--muted); font-size: 0.94rem; }
+
+      .community {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        align-items: center;
+        padding: clamp(25px, 5vw, 52px);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: linear-gradient(120deg, rgba(78, 168, 255, 0.1), rgba(146, 114, 255, 0.07));
+      }
+      .community h2 {
+        margin: 12px 0;
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1.05;
+        letter-spacing: -0.055em;
+      }
+      .community p { color: var(--muted); }
+      .community-list {
+        display: grid;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .community-list li {
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(9, 11, 18, 0.34);
+      }
+      .community-list li::before {
+        content: "✓";
+        margin-right: 11px;
+        color: var(--ice);
+        font-weight: 900;
+      }
+
+      .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+      .plan { display: flex; flex-direction: column; min-height: 290px; }
+      .plan.featured {
+        border-color: rgba(139, 233, 255, 0.42);
+        box-shadow: 0 16px 50px rgba(78, 168, 255, 0.09);
+      }
+      .plan-tag {
+        color: var(--ice);
+        font-size: 0.76rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .plan h3 { margin: 10px 0 7px; font-size: 1.5rem; }
+      .plan p { color: var(--muted); }
+      .plan ul {
+        display: grid;
+        gap: 8px;
+        margin: 5px 0 22px;
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .plan .button { margin-top: auto; }
+      .disclaimer { margin: 16px 0 0; color: #858d9d; font-size: 0.82rem; }
+
+      .faq { display: grid; gap: 10px; max-width: 850px; }
+      .faq-item {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.025);
+      }
+      .faq-question {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 18px 20px;
+        border: 0;
+        background: transparent;
+        text-align: left;
+        font-weight: 750;
+        cursor: pointer;
+      }
+      .faq-question::after { content: "+"; color: var(--ice); font-size: 1.2rem; }
+      .faq-question[aria-expanded="true"]::after { content: "−"; }
+      .faq-answer {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.2s ease;
+      }
+      .faq-answer > div { overflow: hidden; }
+      .faq-answer p {
+        margin: 0;
+        padding: 0 20px 18px;
+        color: var(--muted);
+      }
+      .faq-question[aria-expanded="true"] + .faq-answer { grid-template-rows: 1fr; }
+
+      .contact-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 30px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: linear-gradient(110deg, rgba(139, 233, 255, 0.1), rgba(146, 114, 255, 0.09));
+      }
+      .contact-box h2 {
+        margin: 9px 0 5px;
+        font-size: clamp(1.7rem, 3vw, 2.5rem);
+        letter-spacing: -0.05em;
+      }
+      .contact-box p { margin: 0; color: var(--muted); }
+      .footer { margin-top: 80px; border-top: 1px solid var(--line); }
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 28px 0;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+      .footer-bottom {
+        padding: 15px 0 25px;
+        border-top: 1px solid var(--line);
+        color: #858d9d;
+        font-size: 0.82rem;
+      }
+      .toast {
+        position: fixed;
+        z-index: 20;
+        right: 20px;
+        bottom: 20px;
+        max-width: min(390px, calc(100% - 40px));
+        padding: 13px 17px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        background: #171c29;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+        opacity: 0;
+        transform: translateY(10px);
+        pointer-events: none;
+        transition: 0.2s ease;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 850px) {
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 68px;
+          left: 20px;
+          right: 20px;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0;
+          padding: 10px;
+          border: 1px solid var(--line);
+          border-radius: 16px;
+          background: #111520;
+        }
+        .nav-links.open { display: flex; }
+        .nav-links a { padding: 12px; }
+        .nav-actions .button { display: none; }
+        .menu-button { display: inline-flex; }
+        .hero-grid { grid-template-columns: 1fr; gap: 35px; }
+        .hero { padding-top: 72px; }
+        .hero-copy { max-width: 760px; }
+        .section-heading { display: block; }
+        .section-heading p { margin-top: 14px; }
+        .community { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 620px) {
+        .container { width: min(var(--width), calc(100% - 28px)); }
+        .hero { padding: 58px 0 42px; }
+        h1 { font-size: clamp(2.8rem, 14vw, 4.3rem); }
+        .section { padding: 62px 0; }
+        .feature-grid, .plans { grid-template-columns: 1fr; }
+        .server-panel { padding: 20px; }
+        .server-details { gap: 7px; }
+        .detail { padding: 11px 9px; }
+        .detail strong { font-size: 0.85rem; }
+        .contact-box, .footer-inner { align-items: flex-start; flex-direction: column; }
+        .footer-bottom { align-items: flex-start; flex-direction: column; }
+        .button { width: 100%; }
+        .hero-buttons { display: grid; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container nav">
+        <a class="brand" href="#anasayfa" aria-label="PrimBuz Redstone ana sayfa">
+          <span class="brand-mark" aria-hidden="true">P</span>
+          <span>PrimBuz <span style="color: var(--ice)">Redstone</span></span>
+        </a>
+
+        <nav class="nav-links" id="site-nav" aria-label="Ana menü">
+          <a href="#ozellikler">Özellikler</a>
+          <a href="#vip">VIP Paketleri</a>
+          <a href="#sss">SSS</a>
+          <a href="#iletisim">İletişim</a>
+        </nav>
+
+        <div class="nav-actions">
+          <a class="button button-primary" href="#sunucu">Sunucuya Katıl <span aria-hidden="true">↗</span></a>
+          <button class="button menu-button" id="menu-button" aria-label="Menüyü aç" aria-expanded="false" aria-controls="site-nav">
+            <span aria-hidden="true">☰</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="anasayfa">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">Minecraft topluluğuna hoş geldin</span>
+            <h1>Macera burada <span>başlıyor.</span></h1>
+            <p>
+              PrimBuz Redstone sunucusuna katıl, arkadaşlarınla oyna ve topluluğun bir parçası ol.
+              Sunucuya katılmadan önce sürüm ve bağlantı durumunu aşağıdan kontrol et.
+            </p>
+            <div class="hero-buttons">
+              <a class="button button-primary" href="#sunucu">Sunucu bilgilerini gör <span aria-hidden="true">↓</span></a>
+              <a class="button" href="#vip">VIP paketlerini keşfet</a>
+            </div>
+            <p class="small-note">Paket içerikleri ve fiyatlar sunucu yönetimi tarafından belirlenir.</p>
+          </div>
+
+          <aside class="server-panel" id="sunucu" aria-label="Sunucu bilgileri">
+            <div class="panel-top">
+              <span class="panel-label">Sunucu bilgileri</span>
+              <span class="status-pill"><span class="status-dot" id="status-dot"></span><span id="status-label">Kontrol ediliyor</span></span>
+            </div>
+
+            <div class="ip-box">
+              <span class="ip-caption">Java sunucu adresi</span>
+              <div class="ip-row">
+                <strong id="server-ip">prim.buz.redstone.tr</strong>
+                <button class="copy-button" id="copy-ip" type="button" aria-label="Sunucu adresini kopyala">Kopyala</button>
+              </div>
+            </div>
+
+            <div class="server-details">
+              <div class="detail"><span>Oyuncular</span><strong id="players">—</strong></div>
+              <div class="detail"><span>Sürüm</span><strong id="version">—</strong></div>
+              <div class="detail"><span>Durum</span><strong id="server-state">Kontrol ediliyor</strong></div>
+            </div>
+            <p class="status-message" id="status-message" aria-live="polite">Sunucu durumu sorgulanıyor…</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="ozellikler">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Sunucuyu keşfet</span>
+              <h2>Oyununa yakışan bir topluluk deneyimi.</h2>
+            </div>
+            <p>Sunucu modları, etkinlikleri ve kuralları hakkında güncel bilgileri topluluk kanallarından öğrenebilirsin.</p>
+          </div>
+
+          <div class="feature-grid">
+            <article class="card">
+              <div class="feature-icon" aria-hidden="true">◇</div>
+              <h3>Birlikte oyna</h3>
+              <p>Arkadaşlarınla sunucuya katıl, topluluğu tanı ve kendi oyun tarzını oluştur.</p>
+            </article>
+            <article class="card">
+              <div class="feature-icon" aria-hidden="true">✦</div>
+              <h3>Etkinlikleri takip et</h3>
+              <p>Sunucu etkinlikleri ve duyurular için resmi topluluk kanallarını takip et.</p>
+            </article>
+            <article class="card">
+              <div class="feature-icon" aria-hidden="true">⬡</div>
+              <h3>Destek al</h3>
+              <p>Bağlantı veya oyunla ilgili sorunlarda sunucu yönetimine ulaş.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container community">
+          <div>
+            <span class="eyebrow">Topluluk</span>
+            <h2>Oyuna katıl. Topluluğu keşfet.</h2>
+            <p>
+              Sunucuya bağlanmak için adresi kopyala ve Minecraft Java Edition sunucu listene ekle.
+              Sunucu kuralları ve güncel duyurular için yönetimle iletişim kur.
+            </p>
+            <a class="button button-primary" href="#sunucu">Sunucu adresini kopyala</a>
+          </div>
+          <ul class="community-list">
+            <li>Sunucu adresi: <strong>prim.buz.redstone.tr</strong></li>
+            <li>Güncel sürüm bilgisi sunucu durumundan alınır</li>
+            <li>VIP ve destek bilgileri yönetimden öğrenilir</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="vip">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">VIP paketleri</span>
+              <h2>Sana uygun paketi yönetimle netleştir.</h2>
+            </div>
+            <p>Paket fiyatı, süresi ve avantajları sunucunun güncel koşullarına göre değişebilir.</p>
+          </div>
+
+          <div class="plans">
+            <article class="card plan">
+              <span class="plan-tag">Başlangıç</span>
+              <h3>VIP</h3>
+              <p>VIP üyeliğinin güncel kapsamını ve fiyatını öğren.</p>
+              <ul>
+                <li>Paket detayları yönetim tarafından paylaşılır</li>
+                <li>Satın almadan önce koşulları kontrol et</li>
+              </ul>
+              <a class="button purchase-button" href="#iletisim">Bilgi al</a>
+            </article>
+
+            <article class="card plan featured">
+              <span class="plan-tag">Öne çıkan</span>
+              <h3>Premium</h3>
+              <p>Premium paket mevcutsa özellikleri ve fiyatı hakkında bilgi al.</p>
+              <ul>
+                <li>İçerik sunucuya göre değişebilir</li>
+                <li>Ödeme yöntemi yönetimden teyit edilir</li>
+              </ul>
+              <a class="button button-primary purchase-button" href="#iletisim">Bilgi al</a>
+            </article>
+
+            <article class="card plan">
+              <span class="plan-tag">Üst seviye</span>
+              <h3>Özel Paket</h3>
+              <p>Diğer paket seçenekleri veya özel teklifler için iletişim kur.</p>
+              <ul>
+                <li>Güncel stok mevcudunu sor</li>
+                <li>İşlem öncesi teslimat bilgisini teyit et</li>
+              </ul>
+              <a class="button purchase-button" href="#iletisim">Bilgi al</a>
+            </article>
+          </div>
+          <p class="disclaimer">Bu sayfada gerçek ödeme alınmaz. Ödeme bağlantısı ve paket koşulları yönetim tarafından eklenmelidir.</p>
+        </div>
+      </section>
+
+      <section class="section" id="sss">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Yardım</span>
+              <h2>Sık sorulan sorular</h2>
+            </div>
+          </div>
+
+          <div class="faq">
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">Sunucu adresi nedir?</button>
+              <div class="faq-answer"><div><p>Java sunucu adresi <strong>prim.buz.redstone.tr</strong>. Üstteki kopyalama düğmesini kullanabilirsin.</p></div></div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">Sunucu hangi sürümü destekliyor?</button>
+              <div class="faq-answer"><div><p>Sayfa sunucudan sürüm bilgisini otomatik almaya çalışır. Bilgi alınamazsa yönetimden güncel sürümü teyit et.</p></div></div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">VIP paketi nasıl satın alabilirim?</button>
+              <div class="faq-answer"><div><p>Bu demo sayfasında ödeme alınmıyor. Resmi satın alma yöntemi ve paket koşulları için sunucu yönetimiyle iletişim kur.</p></div></div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">Discord bağlantısı neden yok?</button>
+              <div class="faq-answer"><div><p>Bu alan site için örnek olarak hazırlandı. Gerçek topluluk/Discord bağlantısını sunucu yönetimi ekleyebilir.</p></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="iletisim">
+        <div class="container">
+          <div class="contact-box">
+            <div>
+              <span class="eyebrow">İletişim</span>
+              <h2>Sunucu yönetimiyle iletişime geç.</h2>
+              <p>VIP, destek ve genel sorular için iletişim bilgisi ekleyin.</p>
+            </div>
+            <a class="button button-primary" href="mailto:destek@prim.buz.redstone.tr">E-posta gönder</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div>
+          <strong style="color: var(--text);">PrimBuz Redstone</strong><br />
+          Minecraft sunucusu ve topluluk deneyimi.
+        </div>
+        <div>
+          <a href="#ozellikler">Özellikler</a><br />
+          <a href="#vip">VIP Paketleri</a><br />
+          <a href="#sss">SSS</a>
+        </div>
+        <div>
+          <a href="#iletisim">İletişim</a><br />
+          <a href="#sunucu">Sunucu adresi</a>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <span>© 2026 PrimBuz Redstone</span>
+        <span>Sunucu bilgileri canlı olarak kontrol edilir.</span>
+      </div>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">Adres kopyalandı.</div>
+
+    <script>
+      const serverAddress = 'prim.buz.redstone.tr';
+      const statusDot = document.getElementById('status-dot');
+      const statusLabel = document.getElementById('status-label');
+      const serverState = document.getElementById('server-state');
+      const statusMessage = document.getElementById('status-message');
+      const playersEl = document.getElementById('players');
+      const versionEl = document.getElementById('version');
+      const toast = document.getElementById('toast');
+      const copyButton = document.getElementById('copy-ip');
+      const menuButton = document.getElementById('menu-button');
+      const siteNav = document.getElementById('site-nav');
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(showToast.timeoutId);
+        showToast.timeoutId = setTimeout(() => toast.classList.remove('show'), 1800);
+      }
+
+      async function getServerStatus() {
+        try {
+          statusMessage.textContent = 'Sunucu durumu sorgulanıyor…';
+          const response = await fetch(`https://api.mcsrvstat.us/2/${serverAddress}`, { cache: 'no-store' });
+          const data = await response.json();
+
+          if (!data.online) {
+            statusDot.classList.remove('online');
+            statusDot.classList.add('offline');
+            statusLabel.textContent = 'Çevrimdışı';
+            serverState.textContent = 'Çevrimdışı';
+            playersEl.textContent = '—';
+            versionEl.textContent = '—';
+            statusMessage.textContent = 'Sunucu şu anda erişilebilir değil. Daha sonra tekrar kontrol et.';
+            return;
+          }
+
+          statusDot.classList.remove('offline');
+          statusDot.classList.add('online');
+          statusLabel.textContent = 'Çevrimiçi';
+          serverState.textContent = 'Çevrimiçi';
+          playersEl.textContent = data.players?.online != null ? `${data.players.online}/${data.players.max}` : '—';
+          versionEl.textContent = data.version || 'Belirsiz';
+          statusMessage.textContent = data.motd?.clean?.[0]
+            ? `Sunucu mesajı: ${data.motd.clean[0]}`
+            : 'Sunucu bağlantısı aktif. Minecraft Java sürümünü kontrol edip giriş yapabilirsin.';
+        } catch (error) {
+          statusDot.classList.remove('online');
+          statusDot.classList.add('offline');
+          statusLabel.textContent = 'Bilinmiyor';
+          serverState.textContent = 'Bilinmiyor';
+          playersEl.textContent = '—';
+          versionEl.textContent = '—';
+          statusMessage.textContent = 'Sunucu bilgisi alınamadı. Lütfen daha sonra tekrar dene.';
+        }
+      }
+
+      copyButton.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(serverAddress);
+          showToast('Sunucu adresi kopyalandı.');
+        } catch (error) {
+          const temp = document.createElement('textarea');
+          temp.value = serverAddress;
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          temp.remove();
+          showToast('Sunucu adresi kopyalandı.');
+        }
+      });
+
+      menuButton.addEventListener('click', () => {
+        const isOpen = siteNav.classList.toggle('open');
+        menuButton.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      document.querySelectorAll('.faq-question').forEach((button) => {
+        button.addEventListener('click', () => {
+          const expanded = button.getAttribute('aria-expanded') === 'true';
+          button.setAttribute('aria-expanded', String(!expanded));
+        });
+      });
+
+      document.querySelectorAll('.nav-links a').forEach((link) => {
+        link.addEventListener('click', () => {
+          siteNav.classList.remove('open');
+          menuButton.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      getServerStatus();
+    </script>
+  </body>
+</html>
